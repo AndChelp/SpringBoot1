@@ -10,7 +10,7 @@ import first.response.SingleUserResponse;
 import first.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,18 +20,18 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
 public class UsersController {
     @Autowired
     private final UsersService usersService;
 
-    @PostMapping(value = "/users")
+    @PostMapping
     public ResponseEntity<ErrorResponse> create(@Valid @RequestBody UserData user) {
         usersService.addUser(user);
         return ResponseEntity.ok(new ErrorResponse(ErrorCode.CREATED, "User created!"));
     }
 
-    @GetMapping(value = "/users")
+    @GetMapping
     public ResponseEntity<ErrorResponse> read() throws UserNotFoundException {
         List<UserData> userDataList = usersService.findAllUsers();
         List<UserAPI> userAPIList = new ArrayList<>();
@@ -41,13 +41,13 @@ public class UsersController {
         return ResponseEntity.ok(new MultipleUsersResponse(ErrorCode.FOUND, "Found " + userAPIList.size() + " users!", userAPIList, userAPIList.size()));
     }
 
-    @GetMapping(value = "/users/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<ErrorResponse> read(@PathVariable(name = "id") long id) throws UserNotFoundException {
         UserAPI userAPI = new UserAPI(usersService.findUserById(id));
         return ResponseEntity.ok(new SingleUserResponse(ErrorCode.FOUND, "User found!", userAPI));
     }
 
-    @DeleteMapping(value = "/users/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<ErrorResponse> delete(@PathVariable(name = "id") long id) throws UserNotFoundException {
         usersService.deleteUserById(id);
         return ResponseEntity.ok(new ErrorResponse(ErrorCode.DELETED, "User deleted!"));
