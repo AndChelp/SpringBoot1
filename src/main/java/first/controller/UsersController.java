@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
+@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsersController {
     @Autowired
     private final UsersService usersService;
@@ -28,7 +28,7 @@ public class UsersController {
     @PostMapping
     public ResponseEntity<ErrorResponse> create(@Valid @RequestBody UserData user) {
         usersService.addUser(user);
-        return ResponseEntity.ok(new ErrorResponse(ErrorCode.CREATED, "User created!"));
+        return ResponseEntity.ok(new ErrorResponse(ErrorCode.OK, "User created!"));
     }
 
     @GetMapping
@@ -38,19 +38,19 @@ public class UsersController {
         for (UserData userData : userDataList) {
             userAPIList.add(new UserAPI(userData));
         }
-        return ResponseEntity.ok(new MultipleUsersResponse(ErrorCode.FOUND, "Found " + userAPIList.size() + " users!", userAPIList, userAPIList.size()));
+        return ResponseEntity.ok(new MultipleUsersResponse(ErrorCode.OK, "Found " + userAPIList.size() + " users!", userAPIList, userAPIList.size()));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ErrorResponse> read(@PathVariable(name = "id") long id) throws UserNotFoundException {
         UserAPI userAPI = new UserAPI(usersService.findUserById(id));
-        return ResponseEntity.ok(new SingleUserResponse(ErrorCode.FOUND, "User found!", userAPI));
+        return ResponseEntity.ok(new SingleUserResponse(ErrorCode.OK, "User found!", userAPI));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ErrorResponse> delete(@PathVariable(name = "id") long id) throws UserNotFoundException {
         usersService.deleteUserById(id);
-        return ResponseEntity.ok(new ErrorResponse(ErrorCode.DELETED, "User deleted!"));
+        return ResponseEntity.ok(new ErrorResponse(ErrorCode.OK, "User deleted!"));
     }
 }
 
