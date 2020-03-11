@@ -13,7 +13,9 @@ public class ValidationErrorFields {
     private String message;
 
     static List<ValidationErrorFields> getFields(List<FieldError> fieldErrors) {
+
         List<ValidationErrorFields> validationErrorFieldsList = new ArrayList<>();
+
         for (FieldError fieldError : fieldErrors) {
             ValidationErrorFields errors = new ValidationErrorFields();
             errors.setField(fieldError.getField());
@@ -21,7 +23,7 @@ public class ValidationErrorFields {
             errors.setMessage(fieldError.getDefaultMessage());
             validationErrorFieldsList.add(errors);
         }
+
         return validationErrorFieldsList;
     }
-
 }

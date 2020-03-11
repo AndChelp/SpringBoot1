@@ -17,15 +17,14 @@ import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-/*
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Response> handleAllExceptions(Exception ex) {
         Response response = Response.builder()
                 .statusCode(ErrorCode.UNEXPECTED_EXCEPTION)
-                .statusMsg(ex.getMessage())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -46,17 +45,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .statusMsg("JSON parsing error")
                 .build(), status);
     }
-/*
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidMethodsExceptions(Exception ex) {
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.METHOD_NOT_ALLOWED, ex.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
-    }
-
-    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<ErrorResponse> handleParsingExceptions(Exception ex) {
-        return new ResponseEntity<>(new ErrorResponse(ErrorCode.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-*/
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Response> handleUserNotFound(Exception ex) {

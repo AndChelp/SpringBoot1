@@ -1,13 +1,13 @@
 package first.controller;
 
 import first.exception.UserNotFoundException;
+import first.log.annotation.Level;
+import first.log.annotation.Log;
 import first.model.UserAPI;
 import first.model.UserData;
 import first.response.Response;
 import first.service.UsersService;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +33,7 @@ public class UsersController {
         );
     }
 
+    @Log(level = Level.DEBUG)
     @GetMapping
     public ResponseEntity<Response> read() throws UserNotFoundException {
         List<UserData> userDataList = usersService.findAllUsers();
@@ -48,6 +49,7 @@ public class UsersController {
         );
     }
 
+    @Log
     @GetMapping(value = "/{id}")
     public ResponseEntity<Response> read(@PathVariable(name = "id") long id) throws UserNotFoundException {
         UserAPI userAPI = new UserAPI(usersService.findUserById(id));

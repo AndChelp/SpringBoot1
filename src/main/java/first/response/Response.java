@@ -10,11 +10,11 @@ import java.util.List;
 
 @Builder
 @Getter
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_DEFAULT) //Исключение всех Default значений из сериализации
 public class Response {
     @Builder.Default
     @JsonInclude
-    private int statusCode = 0;
+    private int statusCode = 0; //Единственное доступное Default значение
     private String statusMsg;
     private int userCount;
     private List<UserAPI> userAPIList;
