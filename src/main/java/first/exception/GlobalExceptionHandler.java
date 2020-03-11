@@ -34,6 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .validationErrorFields(
                         ValidationErrorFields.getFields(ex.getBindingResult().getFieldErrors())
                 )
+
                 .build(), status);
     }
 
