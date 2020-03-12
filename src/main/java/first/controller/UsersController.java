@@ -1,7 +1,7 @@
 package first.controller;
 
 import first.exception.UserNotFoundException;
-import first.log.annotation.Level;
+import first.log.Level;
 import first.log.annotation.Log;
 import first.model.UserAPI;
 import first.model.UserData;
@@ -24,6 +24,7 @@ public class UsersController {
     @Autowired
     private final UsersService usersService;
 
+    @Log(level = Level.INFO)
     @PostMapping
     public ResponseEntity<Response> create(@Valid @RequestBody UserData user) {
         usersService.addUser(user);
@@ -49,7 +50,7 @@ public class UsersController {
         );
     }
 
-    @Log
+    @Log(level = Level.DEBUG)
     @GetMapping(value = "/{id}")
     public ResponseEntity<Response> read(@PathVariable(name = "id") long id) throws UserNotFoundException {
         UserAPI userAPI = new UserAPI(usersService.findUserById(id));
@@ -60,6 +61,7 @@ public class UsersController {
         );
     }
 
+    @Log(level = Level.INFO)
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Response> delete(@PathVariable(name = "id") long id) throws UserNotFoundException {
         usersService.deleteUserById(id);

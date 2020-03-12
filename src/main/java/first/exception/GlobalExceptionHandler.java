@@ -1,5 +1,7 @@
 package first.exception;
 
+import first.log.Level;
+import first.log.annotation.Log;
 import first.response.ErrorCode;
 import first.response.Response;
 import org.springframework.http.HttpHeaders;
@@ -12,12 +14,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @Log(level = Level.ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Response> handleAllExceptions(Exception ex) {
         Response response = Response.builder()
@@ -26,6 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Log(level = Level.WARN)
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return new ResponseEntity<>(Response.builder()
@@ -34,19 +35,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .validationErrorFields(
                         ValidationErrorFields.getFields(ex.getBindingResult().getFieldErrors())
                 )
-
                 .build(), status);
     }
 
+    @Log(level = Level.ERROR)
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
         return new ResponseEntity<>(Response.builder()
                 .statusCode(ErrorCode.VALIDATION_ERROR)
                 .statusMsg("JSON parsing error")
                 .build(), status);
     }
 
+    @Log(level = Level.WARN)
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Response> handleUserNotFound(Exception ex) {
         Response response = Response.builder()
