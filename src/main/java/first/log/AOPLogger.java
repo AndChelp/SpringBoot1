@@ -20,49 +20,50 @@ public class AOPLogger {
         if (!extraMessage.isEmpty()) {
             extraMessage = ", and extra message = " + extraMessage;
         }*/
+        String methodName = point.getSignature().toShortString();
         Object proceedingObject = null;
         switch (annotationLog.level()) {
             case ERROR:
-                logError(point.getSignature(), getException(point));
+                logError(methodName, getException(point));
                 break;
             case WARN:
-                logWarn(point.getSignature(), getException(point));
+                logWarn(methodName, getException(point));
                 break;
             case DEBUG:
                 long startTime = System.currentTimeMillis();
                 proceedingObject = point.proceed();
                 long passedTime = System.currentTimeMillis() - startTime;
-                logDebug(point.getSignature(), point.getArgs(), passedTime);
+                logDebug(methodName, point.getArgs(), passedTime);
                 break;
             case INFO:
-                logInfo(point.getSignature(), point.getArgs());
+                logInfo(methodName, point.getArgs());
                 break;
         }
         return proceedingObject == null ? point.proceed() : proceedingObject;
     }
 
-    private void logInfo(Signature signature, Object[] args) {
-        logger.info("Method = {} executed with args = {}", signature, args);
+    private void logInfo(String methodName, Object[] args) {
+        logger.info("Method = {} executed with args = {}", methodName, args);
     }
 
-    private void logError(Signature method, Exception ex) {
+    private void logError(String methodName, Exception ex) {
         if (ex != null) {
-            logger.error("Method = {} got exception with message = {}", method, ex.getMessage());
+            logger.error("Handler = {} got exception with message = {}", methodName, ex.getMessage());
         } else {
-            logger.error("Some exception in method = {}", method);
+            logger.error("Some exception in method = {}", methodName);
         }
     }
 
-    private void logWarn(Signature method, Exception ex) {
+    private void logWarn(String methodName, Exception ex) {
         if (ex != null) {
-            logger.warn("Handler = {} got exception in method = {} with message = {}", method.toShortString(), ex.getStackTrace()[0], ex.getMessage());
+            logger.warn("Handler = {} got exception in method = {} with message = {}", methodName, ex.getStackTrace()[0], ex.getMessage());
         } else {
-            logger.warn("Some exception in method = {}", method);
+            logger.warn("Some exception in method = {}", methodName);
         }
     }
 
-    private void logDebug(Signature method, Object[] args, long passedTime) {
-        logger.debug("Method = {} executed in = {}ms with args = {}", method, passedTime, args);
+    private void logDebug(String methodName, Object[] args, long passedTime) {
+        logger.debug("Method = {} executed in = {}ms with args = {}", methodName, passedTime, args);
     }
 
     private Exception getException(ProceedingJoinPoint point) {
